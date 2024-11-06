@@ -5,12 +5,15 @@ function UserForm() {
     //set initial field state 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [Interest, setInterest] = useState('');
     //set error initial state
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
+    const [InterestError, setInterestError] = useState('');
 
     const handleSubmit = event => {
         event.preventDefault();
+        //setting up email error handling
         let emailValid = false;
         if (email.length == 0) {
             setEmailError("Email is required");
@@ -26,6 +29,7 @@ function UserForm() {
             emailValid = true
         }
 
+        //setting up password error handling
         let passwordValid = false;
         if (password.length == 0) {
             setPasswordError("Password is required");
@@ -41,10 +45,21 @@ function UserForm() {
             passwordValid = true
         }
 
-        if (emailValid && passwordValid) {
-            alert('Email: ' + email + '\nPassword: ' + password);
+        //setting up interest error handling
+        let interestValid = false;
+        if (Interest.length == 0) {
+            setInterestError("We would like to know something interesting about you");
+        }
+        else {
+            setInterestError("")
+            interestValid = true
+        }
+
+        if (emailValid && passwordValid && interestValid) {
+            alert('Email: ' + email + '\nPassword: ' + password + '\nInterest: ');
             setEmail('');
             setPassword('');
+            setInterest('');
         }
     }
     return (
@@ -67,19 +82,29 @@ function UserForm() {
                         onChange={event => setPassword(event.target.value)}
                         value={password} />
                 </Form.Group>
+                {passwordError.length > 0 &&
+                    <Alert variant="danger">{passwordError}</Alert>}
+
+                <Form.Group controlId="formBasicInterest">
+                    <Form.Label>Interest</Form.Label>
+                    <Form.Control type="interest" placeholder="Enter interest"
+                        onChange={event => setInterest(event.target.value)}
+                        value={Interest} />
+                    <Form.Text className="text-muted">
+                        Tell us something interesting about yourself!
+                    </Form.Text>
+                </Form.Group>
+                {InterestError.length > 0 &&
+                    <Alert variant="danger">{InterestError}</Alert>}
                 <Form.Group controlId="formBasicCheckbox">
                     <Form.Check type="checkbox" label="Check me out" />
                 </Form.Group>
-                {passwordError.length > 0 &&
-                    <Alert variant="danger">{passwordError}</Alert>}
+
                 <Button variant="primary" type="submit">
                     Submit
                 </Button>
 
             </Form>
-            {/* Email entered: {email}
-            <br />
-            Password entered: {password} */}
         </div>
     )
 }

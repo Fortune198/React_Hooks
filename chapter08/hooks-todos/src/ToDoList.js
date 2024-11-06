@@ -1,27 +1,26 @@
-import React, { useContext, useState } from 'react'
-import { TodosContext } from './App'
-import { Table, Form, Button } from 'react-bootstrap'
+import React, { useContext, useState } from 'react';
+import { TodosContext } from './App';
+import { Table, Form, Button } from 'react-bootstrap';
+
 function ToDoList() {
     const { state, dispatch } = useContext(TodosContext);
-    const [todoText, setTodoText] = useState("")
+    const [todoText, setTodoText] = useState('');
     const [editMode, setEditMode] = useState(false)
     const [editTodo, setEditTodo] = useState(null)
     const buttonTitle = editMode ? "Edit" : "Add";
-    const handleSubmit = event => {
+
+    function handleSubmit(event) {
         event.preventDefault();
         if (editMode) {
-            dispatch({
-                type: 'edit', payload:
-                    { ...editTodo, text: todoText }
-            })
+            dispatch({ type: 'edit', payload: { ...editTodo, text: todoText } })
             setEditMode(false)
             setEditTodo(null)
+        }else {
+            dispatch({ type: 'add', payload: todoText });
         }
-        else {
-            dispatch({ type: 'add', payload: todoText })
-        }
-        setTodoText("")
+        setTodoText(''); // to clear field after adding
     }
+
     return (
         <div>
             <Form onSubmit={handleSubmit}>
@@ -29,8 +28,7 @@ function ToDoList() {
                     <Form.Control
                         type="text"
                         placeholder="Enter To Do"
-                        onChange={event =>
-                            setTodoText(event.target.value)}
+                        onChange={event => setTodoText(event.target.value)}
                         value={todoText}
                     />
                 </Form.Group>
@@ -41,7 +39,7 @@ function ToDoList() {
             <Table striped bordered hover>
                 <thead>
                     <tr>
-                        <th>To Do</th>
+                        <th>To-Do</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -50,20 +48,24 @@ function ToDoList() {
                     {state.todos.map(todo => (
                         <tr key={todo.id}>
                             <td>{todo.text}</td>
-                            <td onClick={() => {
-                                setTodoText(todo.text)
-                                setEditMode(true)
-                                setEditTodo(todo)
-                            }}>
-                                Edit
-                            </td>
-                            <td onClick={() =>
-                                dispatch({ type: 'delete', payload: todo })}>Delete</td>
+                            <td
+                                onClick={() => {
+                                    setTodoText(todo.text)
+                                    setEditMode(true)
+                                    setEditTodo(todo)
+                                }}
+                            >Edit</td>
+                            <td
+                                onClick={() =>
+                                    dispatch({ type: 'delete', payload: todo })
+                                }
+                            >Delete</td>
                         </tr>
                     ))}
                 </tbody>
             </Table>
         </div>
-    )
+    );
 }
+
 export default ToDoList;
